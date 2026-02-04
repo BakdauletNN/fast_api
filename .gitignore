@@ -1,47 +1,31 @@
 # Python cache
 __pycache__/
-*.py[cod]
+*.pyc
 *.pyo
 *.pyd
-*.pyc
+*.py[cod]
 
-# Virtual environments
+# Virtual environment
 venv/
 env/
-.venv/
-.env
-
-# Editor
-.vscode/
-.idea/
-*.sublime-project
-*.sublime-workspace
-
-# Database
-*.sqlite
-*.db
-*.sqlite3
+ENV/
 
 # Alembic / migrations cache
 migrations/__pycache__/
-migrations/*.pyc
 
 # Logs
 *.log
-*.log.*
 
-# OS-specific files
+# Database files
+*.db
+
+# IDE / editor
+.vscode/
+.idea/
+
+# OS files
 .DS_Store
 Thumbs.db
 
-# Testing / coverage
-htmlcov/
-.coverage
-.tox/
-.pytest_cache/
-
-# Backup / temp files
-*.bak
-*.swp
-*.tmp
-*.old
+# Environment variables
+.env
