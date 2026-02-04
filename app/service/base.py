@@ -34,7 +34,7 @@ class Base:
             await session.commit()
 
     @classmethod
-    async def delete_user_bookings(cls, id_model: int):
+    async def delete(cls, id_model: int):
         async with session_maker() as session:
             query = delete(cls.model).where(cls.model.id == id_model)
             await session.execute(query)

@@ -1,7 +1,6 @@
 from app.hotels.dao import HotelDAO
 from fastapi import APIRouter
 from datetime import date
-from typing import Optional
 
 
 router = APIRouter(
@@ -11,5 +10,5 @@ router = APIRouter(
 
 
 @router.get("/{location}")
-async def get_hotels(location: str, date_from: Optional[date] = None, date_to: Optional[date] = None):
-    return await HotelDAO.find_all(location=location)
+async def get_hotel(location: str, date_from: date, date_to: date):
+    return await HotelDAO.get_hotel_by_city(location=location, date_from=date_from, date_to=date_to)

@@ -29,3 +29,7 @@ async def add_booking(
     if not booking:
         raise RoomCannorBeCooked
 
+
+@router.delete("/{id_booking}")
+async def del_booking(id_booking: int):
+    return await BookingService.delete(id_model=id_booking)
