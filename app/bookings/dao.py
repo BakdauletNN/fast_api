@@ -78,3 +78,52 @@ class BookingService(Base):
 
             else:
                 return None
+
+    @classmethod
+    async def find_all_info_booking(cls, **filter_by):
+        async with session_maker() as session:
+            user_id = filter_by.get('user_id')
+
+            query = (
+                select(
+                    Bookings.id,
+                    Bookings.room_id,
+                    Bookings.user_id,
+                    Bookings.date_from,
+                    Bookings.date_to,
+                    Bookings.price,
+                    Rooms.image_id,
+                    Rooms.name,
+                    Rooms.description,
+                    Rooms.services,
+                )
+                .select_from(Bookings)
+                .join(Rooms, Rooms.id == Bookings.room_id)
+                .where(Bookings.user_id == user_id)
+            )
+
+            result = await session.execute(query)
+            bookings = result.mappings().all()
+            print(f"Raw bookings: {bookings}")
+
+            # Calculate total_days & total_cost
+            processed_bookings = []
+            for booking in bookings:
+                total_days = (booking["date_to"] - booking["date_from"]).days
+                total_cost = total_days * booking["price"]
+                processed_bookings.append({
+                    "id": booking["id"],
+                    "room_id": booking["room_id"],
+                    "user_id": booking["user_id"],
+                    "date_from": booking["date_from"].isoformat(),
+                    "date_to": booking["date_to"].isoformat(),
+                    "price": booking["price"],
+                    "image_id": booking["image_id"],
+                    "name": booking["name"],
+                    "description": booking["description"],
+                    "services": booking["services"],
+                    "total_cost": total_cost,
+                    "total_days": total_days,
+                })
+
+            return processed_bookings

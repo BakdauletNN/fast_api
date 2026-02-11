@@ -1,5 +1,5 @@
 from app.database import session_maker
-from sqlalchemy import select, insert, delete
+from sqlalchemy import select, insert, delete, and_
 
 
 class Base:
@@ -34,9 +34,24 @@ class Base:
             await session.commit()
 
     @classmethod
-    async def delete(cls, id_model: int):
+    async def delete(cls, id_model: int, user_id: int):
         async with session_maker() as session:
-            query = delete(cls.model).where(cls.model.id == id_model)
-            await session.execute(query)
+            # delete booking only current user
+            query = (
+                delete(cls.model)
+                .where(
+                    and_(
+                        cls.model.id == id_model,
+                        cls.model.user_id == user_id  # check user
+                    )
+                )
+                .returning(cls.model.id)  # returning id deleted model
+            )
+
+            result = await session.execute(query)
             await session.commit()
+
+            # checking that record deleted
+            deleted_id = result.scalar()
+            return deleted_id is not None
 

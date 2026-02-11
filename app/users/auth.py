@@ -29,10 +29,13 @@ def create_acces_token(data: dict) -> str:
 
 async def check_user(input_email: EmailStr, input_pass: str):
     user = await UserDAO.find_one_or_none(email=input_email)
-    if not user and not verify_pass(plain_pass=input_pass, hashed_pass=user.password):
+
+    if not user:
         return None
+
+    if not verify_pass(plain_pass=input_pass, hashed_pass=user.password):
+        return None
+
     return user
-
-
 
 
